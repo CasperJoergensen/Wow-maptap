@@ -1,0 +1,19 @@
+## Interface: 16001
+## Title: Pinpoint Azeroth
+## Notes: A daily map game: find five places on a label-free map of Azeroth.
+## Author: Casper Joergensen
+## Version: @project-version@
+## X-License: MIT
+## X-Website: https://github.com/CasperJoergensen/Wow-maptap
+## SavedVariables: PinpointAzerothDB
+
+Locales.lua
+Places.lua
+Score.lua
+Puzzle.lua
+Stats.lua
+Geo.lua
+MapView.lua
+Window.lua
+Minimap.lua
+Core.lua

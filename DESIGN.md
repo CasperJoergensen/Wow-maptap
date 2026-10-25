@@ -6,7 +6,7 @@ A WoW Forever addon, published on CurseForge, inspired by the daily geography ga
 
 | Topic | Decision |
 |---|---|
-| Game | WoW Forever only (modern retail client, Interface `16001`, Lua 5.1). |
+| Game | WoW Forever only: Blizzard's Classic+ branch on the modern client (Interface `16001`, Lua 5.1), with vanilla geography. Map IDs are the Classic ones (Kalimdor `1414`, Eastern Kingdoms `1415`, zones `1411`–`1458`), with an English name lookup as fallback. |
 | Name | **Pinpoint Azeroth**. Not "MapTap", to stay clear of their brand. Slash `/pinpoint`, `/pa`. |
 | Clues | Place names: capitals, towns, dungeons, landmarks, subzones. Drawn from a hand-curated pool of **500+** places, each with exact coordinates and a difficulty tier. Places from both factions, so everyone shares the same pool. |
 | Map | Eastern Kingdoms and Kalimdor only. |
@@ -81,7 +81,17 @@ All stored account-wide in `PinpointAzerothDB`.
 - A data file of places: stable ID, display name, tier (1–5), continent, x/y in continent map coordinates (0–1), and an optional alternate name.
 - Target **500+** places, roughly 100 per tier, built in batches. The first batch is ~100 places (20 per tier), enough to play. Claude drafts coordinates; every place is spot-checked in game before it ships.
 - Rules for a fair place: a name a player could reasonably know, a single clear location (no names that appear in two zones), and a point at the place's centre or entrance.
-- An in-game dev command (`/pa dev mark <id>`) prints the player's current continent coordinates, to make verifying places fast.
+- In-game dev commands make verifying places fast: `/pa dev near` shows the closest places and how far you are from them, `/pa dev mark` prints your zone coordinates, and `/pa dev check` confirms every map resolved.
+
+## MVP scope
+
+The first build covers the game itself and history/stats. Left for later:
+
+- **Guild board** (the whole section above).
+- **Options panel.** For now `/pa minimap` toggles the minimap button.
+- **Results screen extras.** The summary shows the total, per-round points and streak; the histogram with today's bar is on the Stats tab.
+- **Pool size.** 100 places (20 per tier) instead of 500+, all still to be checked in game.
+- **Places are stored in zone coordinates**, converted to continent coordinates at runtime with `C_Map.GetMapRectOnMap`, because zone coordinates are what players (and guides) know.
 
 ## Code layout
 
@@ -92,13 +102,15 @@ Places.lua           Clue pool data (append-only, with pool editions)
 Puzzle.lua           Realm day, daily selection, practice selection (pure Lua, unit-tested)
 Score.lua            Distance → points, weights, emoji, share line (pure Lua, unit-tested)
 Stats.lua            History records, streaks, aggregates (pure Lua, unit-tested)
+Geo.lua              Map ID resolution, zone -> continent coordinates, continent sizes in yards
 MapView.lua          Two-continent map frame, pins, reveal lines
-Window.lua           Main window and tabs (Play / History / Stats / Guild)
-Guild.lua            Addon-message protocol, sync, board storage
+Window.lua           Main window and tabs (Play / History / Stats; Guild later)
 Minimap.lua          Minimap button
-Settings.lua         Options panel (modern Settings API)
-Core.lua             Saved variables, slash commands, startup
-tests/run.lua        Offline tests with stubbed WoW APIs (lua5.1 tests/run.lua)
+Core.lua             Saved variables, slash commands, dev commands, startup
+Guild.lua            (later) Addon-message protocol, sync, board storage
+Settings.lua         (later) Options panel (modern Settings API)
+tests/run.lua        Offline tests for the pure-Lua parts (lua5.1 tests/run.lua)
+tests/smoke.lua      Plays a full game against stubbed frames (lua5.1 tests/smoke.lua)
 ```
 
 The repo root is the addon folder; `.pkgmeta` excludes docs and tests from the release zip.
