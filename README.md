@@ -11,4 +11,6 @@ A daily map game for **WoW Forever**, inspired by [MapTap](https://maptap.gg). E
 
 **Install:** copy this repository into `Interface/AddOns/PinpointAzeroth`.
 
+**Retail (for testing until Forever launches):** the addon also loads in retail. Zones that Cataclysm reshaped (the Barrens, Stranglethorn, Hillsbrad and Alterac, Badlands, Dun Morogh, Eastern Plaguelands) are left out there, so retail plays with 79 of the 100 places, and its dailies differ from Forever's.
+
 Not in this MVP yet: the guild board and the options panel (see [DESIGN.md](DESIGN.md)).

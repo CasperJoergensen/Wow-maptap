@@ -17,57 +17,64 @@
 
 local _, ns = ...
 
--- Continents. ids are the Classic uiMapIDs; the name is the English
--- fallback if an ID doesn't resolve.
+-- Retail is supported for testing before Forever launches. It uses the
+-- same places, but Cataclysm reshaped some zones, so zones without a
+-- retail ID (and their places) are left out there: Alterac, the Barrens,
+-- Stranglethorn, Hillsbrad, Badlands, Dun Morogh and Eastern Plaguelands.
+-- Coordinates in the remaining zones can still be a little off in retail.
+ns.IS_RETAIL = GetBuildInfo ~= nil and (select(4, GetBuildInfo())) >= 100000
+
+-- Continents and zones. ids are the Classic uiMapIDs (the name is the
+-- English fallback if an ID doesn't resolve); retail lists the retail IDs.
 ns.Continents = {
-    KAL = { ids = { 1414 }, name = "Kalimdor" },
-    EK = { ids = { 1415 }, name = "Eastern Kingdoms" },
+    KAL = { ids = { 1414 }, retail = { 12 }, name = "Kalimdor" },
+    EK = { ids = { 1415 }, retail = { 13 }, name = "Eastern Kingdoms" },
 }
 ns.CONTINENT_ORDER = { "KAL", "EK" } -- left to right on the guess map
 
 ns.Zones = {
     -- Eastern Kingdoms
     alterac = { cont = "EK", ids = { 1416 }, name = "Alterac Mountains" },
-    arathi = { cont = "EK", ids = { 1417 }, name = "Arathi Highlands" },
+    arathi = { cont = "EK", ids = { 1417 }, retail = { 14 }, name = "Arathi Highlands" },
     badlands = { cont = "EK", ids = { 1418 }, name = "Badlands" },
-    blasted = { cont = "EK", ids = { 1419 }, name = "Blasted Lands" },
-    tirisfal = { cont = "EK", ids = { 1420 }, name = "Tirisfal Glades" },
-    silverpine = { cont = "EK", ids = { 1421 }, name = "Silverpine Forest" },
-    wpl = { cont = "EK", ids = { 1422 }, name = "Western Plaguelands" },
+    blasted = { cont = "EK", ids = { 1419 }, retail = { 17 }, name = "Blasted Lands" },
+    tirisfal = { cont = "EK", ids = { 1420 }, retail = { 18 }, name = "Tirisfal Glades" },
+    silverpine = { cont = "EK", ids = { 1421 }, retail = { 21 }, name = "Silverpine Forest" },
+    wpl = { cont = "EK", ids = { 1422 }, retail = { 22 }, name = "Western Plaguelands" },
     epl = { cont = "EK", ids = { 1423 }, name = "Eastern Plaguelands" },
     hillsbrad = { cont = "EK", ids = { 1424 }, name = "Hillsbrad Foothills" },
-    hinterlands = { cont = "EK", ids = { 1425 }, name = "The Hinterlands" },
+    hinterlands = { cont = "EK", ids = { 1425 }, retail = { 26 }, name = "The Hinterlands" },
     dunmorogh = { cont = "EK", ids = { 1426 }, name = "Dun Morogh" },
-    searing = { cont = "EK", ids = { 1427 }, name = "Searing Gorge" },
-    steppes = { cont = "EK", ids = { 1428 }, name = "Burning Steppes" },
-    elwynn = { cont = "EK", ids = { 1429 }, name = "Elwynn Forest" },
-    deadwind = { cont = "EK", ids = { 1430 }, name = "Deadwind Pass" },
-    duskwood = { cont = "EK", ids = { 1431 }, name = "Duskwood" },
-    lochmodan = { cont = "EK", ids = { 1432 }, name = "Loch Modan" },
-    redridge = { cont = "EK", ids = { 1433 }, name = "Redridge Mountains" },
+    searing = { cont = "EK", ids = { 1427 }, retail = { 32 }, name = "Searing Gorge" },
+    steppes = { cont = "EK", ids = { 1428 }, retail = { 36 }, name = "Burning Steppes" },
+    elwynn = { cont = "EK", ids = { 1429 }, retail = { 37 }, name = "Elwynn Forest" },
+    deadwind = { cont = "EK", ids = { 1430 }, retail = { 42 }, name = "Deadwind Pass" },
+    duskwood = { cont = "EK", ids = { 1431 }, retail = { 47 }, name = "Duskwood" },
+    lochmodan = { cont = "EK", ids = { 1432 }, retail = { 48 }, name = "Loch Modan" },
+    redridge = { cont = "EK", ids = { 1433 }, retail = { 49 }, name = "Redridge Mountains" },
     stv = { cont = "EK", ids = { 1434 }, name = "Stranglethorn Vale" },
-    swamp = { cont = "EK", ids = { 1435 }, name = "Swamp of Sorrows" },
-    westfall = { cont = "EK", ids = { 1436 }, name = "Westfall" },
-    wetlands = { cont = "EK", ids = { 1437 }, name = "Wetlands" },
+    swamp = { cont = "EK", ids = { 1435 }, retail = { 51 }, name = "Swamp of Sorrows" },
+    westfall = { cont = "EK", ids = { 1436 }, retail = { 52 }, name = "Westfall" },
+    wetlands = { cont = "EK", ids = { 1437 }, retail = { 56 }, name = "Wetlands" },
     -- Kalimdor
-    durotar = { cont = "KAL", ids = { 1411 }, name = "Durotar" },
-    mulgore = { cont = "KAL", ids = { 1412 }, name = "Mulgore" },
+    durotar = { cont = "KAL", ids = { 1411 }, retail = { 1 }, name = "Durotar" },
+    mulgore = { cont = "KAL", ids = { 1412 }, retail = { 7 }, name = "Mulgore" },
     barrens = { cont = "KAL", ids = { 1413 }, name = "The Barrens" },
-    teldrassil = { cont = "KAL", ids = { 1438 }, name = "Teldrassil" },
-    darkshore = { cont = "KAL", ids = { 1439 }, name = "Darkshore" },
-    ashenvale = { cont = "KAL", ids = { 1440 }, name = "Ashenvale" },
-    needles = { cont = "KAL", ids = { 1441 }, name = "Thousand Needles" },
-    stonetalon = { cont = "KAL", ids = { 1442 }, name = "Stonetalon Mountains" },
-    desolace = { cont = "KAL", ids = { 1443 }, name = "Desolace" },
-    feralas = { cont = "KAL", ids = { 1444 }, name = "Feralas" },
-    dustwallow = { cont = "KAL", ids = { 1445 }, name = "Dustwallow Marsh" },
-    tanaris = { cont = "KAL", ids = { 1446 }, name = "Tanaris" },
-    azshara = { cont = "KAL", ids = { 1447 }, name = "Azshara" },
-    felwood = { cont = "KAL", ids = { 1448 }, name = "Felwood" },
-    ungoro = { cont = "KAL", ids = { 1449 }, name = "Un'Goro Crater" },
-    moonglade = { cont = "KAL", ids = { 1450 }, name = "Moonglade" },
-    silithus = { cont = "KAL", ids = { 1451 }, name = "Silithus" },
-    winterspring = { cont = "KAL", ids = { 1452 }, name = "Winterspring" },
+    teldrassil = { cont = "KAL", ids = { 1438 }, retail = { 57 }, name = "Teldrassil" },
+    darkshore = { cont = "KAL", ids = { 1439 }, retail = { 62 }, name = "Darkshore" },
+    ashenvale = { cont = "KAL", ids = { 1440 }, retail = { 63 }, name = "Ashenvale" },
+    needles = { cont = "KAL", ids = { 1441 }, retail = { 64 }, name = "Thousand Needles" },
+    stonetalon = { cont = "KAL", ids = { 1442 }, retail = { 65 }, name = "Stonetalon Mountains" },
+    desolace = { cont = "KAL", ids = { 1443 }, retail = { 66 }, name = "Desolace" },
+    feralas = { cont = "KAL", ids = { 1444 }, retail = { 69 }, name = "Feralas" },
+    dustwallow = { cont = "KAL", ids = { 1445 }, retail = { 70 }, name = "Dustwallow Marsh" },
+    tanaris = { cont = "KAL", ids = { 1446 }, retail = { 71 }, name = "Tanaris" },
+    azshara = { cont = "KAL", ids = { 1447 }, retail = { 76 }, name = "Azshara" },
+    felwood = { cont = "KAL", ids = { 1448 }, retail = { 77 }, name = "Felwood" },
+    ungoro = { cont = "KAL", ids = { 1449 }, retail = { 78 }, name = "Un'Goro Crater" },
+    moonglade = { cont = "KAL", ids = { 1450 }, retail = { 80 }, name = "Moonglade" },
+    silithus = { cont = "KAL", ids = { 1451 }, retail = { 81 }, name = "Silithus" },
+    winterspring = { cont = "KAL", ids = { 1452 }, retail = { 83 }, name = "Winterspring" },
 }
 
 -- Edition -> first puzzle number that uses it.
@@ -77,7 +84,16 @@ ns.TIER_NAMES = { "Cities", "Towns", "Dungeons & landmarks", "Subzones", "Hidden
 
 ns.Places = {}
 ns.PlacesByID = {}
-local function P(id, tier, name, zone, x, y, edition)
+-- retailXY = { x, y } where a place moved on the retail map.
+local function P(id, tier, name, zone, x, y, edition, retailXY)
+    if ns.IS_RETAIL then
+        if not ns.Zones[zone].retail then
+            return
+        end
+        if retailXY then
+            x, y = retailXY[1], retailXY[2]
+        end
+    end
     local place = { id = id, tier = tier, name = name, zone = zone, x = x / 100, y = y / 100, edition = edition or 1 }
     ns.Places[#ns.Places + 1] = place
     ns.PlacesByID[id] = place
@@ -118,7 +134,7 @@ P(29, 2, "Sun Rock Retreat", "stonetalon", 47.0, 61.0)
 P(30, 2, "Splintertree Post", "ashenvale", 73.0, 61.0)
 P(31, 2, "Nijel's Point", "desolace", 66.0, 10.0)
 P(32, 2, "Shadowprey Village", "desolace", 24.0, 70.0)
-P(33, 2, "Feathermoon Stronghold", "feralas", 30.5, 43.5)
+P(33, 2, "Feathermoon Stronghold", "feralas", 30.5, 43.5, 1, { 46.0, 47.0 })
 P(34, 2, "Camp Mojache", "feralas", 75.0, 44.0)
 P(35, 2, "Grom'gol Base Camp", "stv", 32.0, 28.0)
 P(36, 2, "Refuge Pointe", "arathi", 45.5, 47.0)

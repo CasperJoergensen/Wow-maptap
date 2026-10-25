@@ -2,6 +2,8 @@
 
 The addon was built without access to the game. Scoring, daily selection and stats are covered by offline tests (`lua5.1 tests/run.lua`), and `lua5.1 tests/smoke.lua` plays a full game against stubbed frames, but nothing has been seen in WoW Forever yet. Items marked ⚠️ are the least certain. Turn on `/console scriptErrors 1` first.
 
+Until Forever launches, run the checklist in **retail**. Retail uses its own map IDs (Kalimdor 12, Eastern Kingdoms 13) and leaves out the zones Cataclysm reshaped, so `/pa dev check` should report 79 places. Coordinates in the remaining zones may be slightly off in retail; only report a place as wrong if it's far off.
+
 ## Basics
 
 - [ ] Pinpoint Azeroth shows in the AddOns list and loads without Lua errors.

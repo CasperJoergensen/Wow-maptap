@@ -212,5 +212,29 @@ do
     check("to continent y", math.abs(y - 0.6) < 1e-9, y)
 end
 
+---------------------------------------------------------------------------
+-- Retail pool (for testing before Forever launches)
+---------------------------------------------------------------------------
+do
+    GetBuildInfo = function() return "12.0.5", "1", "", 120105 end
+    local r = {}
+    assert(loadfile("Places.lua"))("PinpointAzeroth", r)
+    GetBuildInfo = nil
+    check("retail detected", r.IS_RETAIL)
+    check("classic not retail", not ns.IS_RETAIL)
+    local perTier = {}
+    for _, p in ipairs(r.Places) do
+        check("retail place has a retail zone: " .. p.name, r.Zones[p.zone].retail ~= nil)
+        perTier[p.tier] = (perTier[p.tier] or 0) + 1
+    end
+    for t = 1, ROUNDS do
+        check("retail tier " .. t .. " has places", (perTier[t] or 0) >= 10, perTier[t])
+    end
+    check("retail leaves out reshaped zones", r.PlacesByID[7] == nil) -- Booty Bay
+    eq("retail override", r.PlacesByID[33].x, 0.46)
+    eq("classic keeps its coords", ns.PlacesByID[33].x, 0.305)
+    eq("retail daily has 5 places", #Puzzle.Daily(1, r.Places, r.EDITIONS, ROUNDS), ROUNDS)
+end
+
 print(("%d passed, %d failed"):format(passed, failures))
 os.exit(failures == 0 and 0 or 1)

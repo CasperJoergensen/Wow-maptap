@@ -28,11 +28,19 @@ local function isContinent(id)
     return info and info.mapType == Enum.UIMapType.Continent, info
 end
 
+-- The map IDs for this client.
+local function idsFor(def)
+    return ns.IS_RETAIL and def.retail or def.ids
+end
+
 local function resolveContinent(def)
-    for _, id in ipairs(def.ids) do
+    for _, id in ipairs(idsFor(def)) do
         if isContinent(id) then
             return id
         end
+    end
+    if ns.IS_RETAIL then
+        return nil
     end
     for id = 1, 3000 do
         local ok, info = isContinent(id)
@@ -50,11 +58,15 @@ local function zoneRect(id, continentID)
 end
 
 local function resolveZone(def, continentID)
-    for _, id in ipairs(def.ids) do
+    for _, id in ipairs(idsFor(def) or {}) do
         local rect = zoneRect(id, continentID)
         if rect then
             return id, rect
         end
+    end
+    -- Retail zone names can match reshaped zones, so no name lookup there.
+    if ns.IS_RETAIL then
+        return nil
     end
     for _, info in ipairs(C_Map.GetMapChildrenInfo(continentID, nil, true) or {}) do
         if info.name == def.name then
@@ -103,19 +115,26 @@ function Geo:Init()
         end
     end
     for key, def in pairs(ns.Zones) do
-        local continentID = self.continents[def.cont]
-        local id, rect
-        if continentID then
-            id, rect = resolveZone(def, continentID)
-        end
-        if id then
-            self.zones[key] = { id = id, rect = rect }
-        else
-            self.missing[#self.missing + 1] = def.name
+        -- Zones without a retail ID aren't used in retail.
+        if def.retail or not ns.IS_RETAIL then
+            self:InitZone(key, def)
         end
     end
     self.ready = #self.missing == 0
     return self.ready
+end
+
+function Geo:InitZone(key, def)
+    local continentID = self.continents[def.cont]
+    local id, rect
+    if continentID then
+        id, rect = resolveZone(def, continentID)
+    end
+    if id then
+        self.zones[key] = { id = id, rect = rect }
+    else
+        self.missing[#self.missing + 1] = def.name
+    end
 end
 
 -- Continent position { c, x, y } of a place, or nil if its zone isn't known.

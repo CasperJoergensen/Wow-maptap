@@ -1,7 +1,12 @@
 -- Loads every addon file against permissive WoW stubs and plays a daily
 -- and a practice game end to end. It catches nil calls and typos in the UI
 -- code; it can't tell whether anything looks right. Run from the repo root:
---   lua5.1 tests/smoke.lua
+--   lua5.1 tests/smoke.lua          (WoW Forever)
+--   lua5.1 tests/smoke.lua retail   (retail)
+
+local RETAIL = arg and arg[1] == "retail"
+local KAL, EK = RETAIL and 12 or 1414, RETAIL and 13 or 1415
+GetBuildInfo = function() return "", "", "", RETAIL and 120105 or 16001 end
 
 local printed = {}
 local function stubObject(name)
@@ -68,8 +73,8 @@ C_DateAndTime = { GetSecondsUntilDailyReset = function() return 23 * 3600 end }
 Enum = { UIMapType = { Continent = 2, Zone = 3 } }
 C_Map = {
     GetMapInfo = function(id)
-        if id == 1414 or id == 1415 then
-            return { mapID = id, name = id == 1414 and "Kalimdor" or "Eastern Kingdoms", mapType = 2 }
+        if id == KAL or id == EK then
+            return { mapID = id, name = id == KAL and "Kalimdor" or "Eastern Kingdoms", mapType = 2 }
         end
         return { mapID = id, name = "Zone " .. id, mapType = 3 }
     end,
@@ -141,4 +146,4 @@ SlashCmdList.PINPOINTAZEROTH("help")
 ns.Minimap:Refresh()
 
 for _, l in ipairs(printed) do print("  " .. l) end
-print("smoke ok (" .. #printed .. " chat lines)")
+print((RETAIL and "retail" or "forever") .. " smoke ok (" .. #printed .. " chat lines)")

@@ -15,4 +15,4 @@ jobs:
       - name: Syntax check
         run: for f in *.lua tests/*.lua; do luac5.1 -p "$f"; done
       - name: Run tests
-        run: lua5.1 tests/run.lua && lua5.1 tests/smoke.lua
+        run: lua5.1 tests/run.lua && lua5.1 tests/smoke.lua && lua5.1 tests/smoke.lua retail

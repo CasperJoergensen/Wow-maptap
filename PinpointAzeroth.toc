@@ -1,4 +1,4 @@
-## Interface: 16001
+## Interface: 16001, 120105
 ## Title: Pinpoint Azeroth
 ## Notes: A daily map game: find five places on a label-free map of Azeroth.
 ## Author: Casper Joergensen

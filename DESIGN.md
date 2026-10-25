@@ -83,6 +83,10 @@ All stored account-wide in `PinpointAzerothDB`.
 - Rules for a fair place: a name a player could reasonably know, a single clear location (no names that appear in two zones), and a point at the place's centre or entrance.
 - In-game dev commands make verifying places fast: `/pa dev near` shows the closest places and how far you are from them, `/pa dev mark` prints your zone coordinates, and `/pa dev check` confirms every map resolved.
 
+## Retail (testing only)
+
+Until Forever launches, the addon also loads in retail (Interface `120105`) so it can be tested. The client is detected from the TOC version (`GetBuildInfo()` ≥ 100000 means retail). Retail uses its own continent and zone IDs, has no name lookup, and leaves out the zones Cataclysm reshaped (Alterac, the Barrens, Stranglethorn, Hillsbrad, Badlands, Dun Morogh, Eastern Plaguelands), along with their places. A place that moved on the retail map can carry a retail coordinate override (Feathermoon Stronghold does). Retail dailies use that smaller pool, so they differ from Forever's.
+
 ## MVP scope
 
 The first build covers the game itself and history/stats. Left for later:

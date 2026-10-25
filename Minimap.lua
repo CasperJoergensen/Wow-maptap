@@ -7,12 +7,11 @@ local L = ns.L
 local Minimap = {}
 ns.Minimap = Minimap
 
-local RADIUS = 80
-
 local function place(button, angle)
     local rad = math.rad(angle)
+    local radius = _G.Minimap:GetWidth() / 2 + 10
     button:ClearAllPoints()
-    button:SetPoint("CENTER", _G.Minimap, "CENTER", math.cos(rad) * RADIUS, math.sin(rad) * RADIUS)
+    button:SetPoint("CENTER", _G.Minimap, "CENTER", math.cos(rad) * radius, math.sin(rad) * radius)
 end
 
 local function dragUpdate(button)
